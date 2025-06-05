@@ -98,7 +98,7 @@ locals {
   # Ipv6 cidr block (To change when multiple Ipv6 CIDR blocks)
   vpc_ipv6_cidr_block = var.vpc_ipv6_cidr_block == null ? local.vpc.ipv6_cidr_block : var.vpc_ipv6_cidr_block
   # Checking if public subnets are dual-stack or IPv6-only
-  public_ipv6only  = can(var.subnets.public.ipv6_native)
+  public_ipv6only  = try(var.subnets.public.ipv6_native, false)
   public_dualstack = !local.public_ipv6only && (can(var.subnets.public.assign_ipv6_cidr) || can(var.subnets.public.ipv6_cidrs))
   # Checking if transit_gateway subnets are dual-stack
   tgw_dualstack = (can(var.subnets.transit_gateway.assign_ipv6_cidr) || can(var.subnets.transit_gateway.ipv6_cidrs))
@@ -106,9 +106,9 @@ locals {
   cwan_dualstack = (can(var.subnets.core_network.assign_ipv6_cidr) || can(var.subnets.core_network.ipv6_cidrs))
 
   # Egress Only Internet Gateway for IPv6
-  # list of private subnet keys with connect_to_public_eigw = true
+  # list of private subnet keys with connect_to_eigw = true
   private_subnets_egress_routed = [for type in local.private_subnet_names : type if try(var.subnets[type].connect_to_eigw == true, false)]
-  # private subnets with cidrs per az if connect_to_public_eigw = true ...  "privatetwo/us-east-1a"
+  # private subnets with cidrs per az if connect_to_eigw = true ...  "privatetwo/us-east-1a"
   private_subnet_names_egress_routed = [for subnet in local.private_per_az : subnet if contains(local.private_subnets_egress_routed, split("/", subnet)[0])]
 
   # VPC LATTICE ############################################################

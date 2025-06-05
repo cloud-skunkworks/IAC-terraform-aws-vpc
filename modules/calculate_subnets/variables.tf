@@ -1,10 +1,10 @@
 variable "subnets" {
-  description = "Defition of subnets to be built. If `netmask` is passed will calculate CIDR. Else `cidrs` list is ziped to var.azs and merged into final output to be built into aws_subnet(s)."
+  description = "Definition of subnets to be built. If `netmask` is passed will calculate CIDR. Else `cidrs` list is zipped to var.azs and merged into final output to be built into aws_subnet(s)."
   type        = any
   # validation happening on root module
 }
 variable "azs" {
-  description = "List of AZs to build. AZ is appened to each IP address prefix name."
+  description = "List of AZs to build. AZ is appended to each IP address prefix name."
   type        = list(string)
 }
 
