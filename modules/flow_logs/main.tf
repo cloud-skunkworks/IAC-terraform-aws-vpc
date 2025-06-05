@@ -45,9 +45,9 @@ resource "aws_flow_log" "main" {
     for_each = var.flow_log_definition.log_destination_type == "s3" ? [true] : []
 
     content {
-      file_format                = var.flow_log_definition.destination_options.file_format
-      per_hour_partition         = var.flow_log_definition.destination_options.per_hour_partition
-      hive_compatible_partitions = var.flow_log_definition.destination_options.hive_compatible_partitions
+      file_format                = try(var.flow_log_definition.destination_options.file_format, "plain-text")
+      per_hour_partition         = try(var.flow_log_definition.destination_options.per_hour_partition, false)
+      hive_compatible_partitions = try(var.flow_log_definition.destination_options.hive_compatible_partitions, false)
     }
   }
 
